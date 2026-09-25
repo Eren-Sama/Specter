@@ -1,0 +1,415 @@
+{
+  "repository": {
+    "owner": "Eren-Sama",
+    "name": "StartupScout",
+    "full_name": "Eren-Sama/StartupScout",
+    "html_url": "https://github.com/Eren-Sama/StartupScout",
+    "description": "StartupScout is a powerful but easy-to-use web scraper designed to collect data about startups. It visits popular startup directories, extracts details about the companies, cleans up that information, and saves it into simple CSV and JSON files for you to use.",
+    "default_branch": "main",
+    "language": "Python",
+    "stars": 0,
+    "forks": 0,
+    "open_issues": 0,
+    "license_name": "Not specified",
+    "updated_at": "2026-03-15T09:17:27Z"
+  },
+  "user_goal": "Analyze https://github.com/Eren-Sama/StartupScout and identify code quality and maintainability issues",
+  "plan": [
+    {
+      "number": 1,
+      "title": "Validate the GitHub repository URL and user goal",
+      "tool": "URL parser",
+      "expected_result": "owner and repo name"
+    },
+    {
+      "number": 2,
+      "title": "Gather repository metadata",
+      "tool": "GitHub API",
+      "expected_result": "basic project context"
+    },
+    {
+      "number": 3,
+      "title": "Inspect the repository file tree",
+      "tool": "GitHub API",
+      "expected_result": "candidate source files"
+    },
+    {
+      "number": 4,
+      "title": "Read selected source files",
+      "tool": "GitHub contents API",
+      "expected_result": "source text for analysis"
+    },
+    {
+      "number": 5,
+      "title": "Run deterministic static analysis",
+      "tool": "Python AST/text analyzer",
+      "expected_result": "evidence-backed findings"
+    },
+    {
+      "number": 6,
+      "title": "Validate findings and prepare a structured report",
+      "tool": "agent reviewer",
+      "expected_result": "final Markdown/JSON result"
+    }
+  ],
+  "execution_status": "completed",
+  "recovery_summary": "No recoverable tool failure occurred during this run.",
+  "tools_used": [
+    "GitHub API tool for repository metadata, tree, and file contents",
+    "Python static-analysis tool using text checks and AST inspection"
+  ],
+  "tool_events": [
+    {
+      "tool": "GitHub API",
+      "action": "fetch repository metadata",
+      "status": "ok",
+      "detail": "Repository metadata collected"
+    },
+    {
+      "tool": "GitHub API",
+      "action": "fetch repository file tree",
+      "status": "ok",
+      "detail": "Repository file tree collected"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/main.py",
+      "status": "ok",
+      "detail": "Read src/main.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/orchestrator.py",
+      "status": "ok",
+      "detail": "Read src/orchestrator.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/__main__.py",
+      "status": "ok",
+      "detail": "Read src/__main__.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/crawlers/http_client.py",
+      "status": "ok",
+      "detail": "Read src/crawlers/http_client.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/crawlers/f6s_crawler.py",
+      "status": "ok",
+      "detail": "Read src/crawlers/f6s_crawler.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/crawlers/wellfound_crawler.py",
+      "status": "ok",
+      "detail": "Read src/crawlers/wellfound_crawler.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/crawlers/saashub_crawler.py",
+      "status": "ok",
+      "detail": "Read src/crawlers/saashub_crawler.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read src/crawlers/yc_crawler.py",
+      "status": "ok",
+      "detail": "Read src/crawlers/yc_crawler.py"
+    },
+    {
+      "tool": "Python static analyzer",
+      "action": "inspect selected source files",
+      "status": "ok",
+      "detail": "Static analysis completed"
+    },
+    {
+      "tool": "agent reviewer",
+      "action": "validate static-analysis findings",
+      "status": "ok",
+      "detail": "Validated 27 findings"
+    }
+  ],
+  "failures": [],
+  "findings": [
+    {
+      "title": "No obvious test directory or test files found",
+      "severity": "medium",
+      "path": "repository tree",
+      "line": null,
+      "evidence": "The repository tree did not include paths like tests/, test_*.py, or files under a test folder.",
+      "recommendation": "Add a small automated test suite around core behavior before making larger changes.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Deeply nested control flow",
+      "severity": "medium",
+      "path": "src/crawlers/f6s_crawler.py",
+      "line": 27,
+      "evidence": "discover_listings reaches nesting depth 6.",
+      "recommendation": "Use early returns or extract part of the decision tree into a helper.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/f6s_crawler.py",
+      "line": 46,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/f6s_crawler.py",
+      "line": 73,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "src/crawlers/f6s_crawler.py",
+      "line": 81,
+      "evidence": "extract_profile is 70 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/f6s_crawler.py",
+      "line": 88,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/f6s_crawler.py",
+      "line": 148,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/http_client.py",
+      "line": 72,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/http_client.py",
+      "line": 81,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Deeply nested control flow",
+      "severity": "medium",
+      "path": "src/crawlers/saashub_crawler.py",
+      "line": 27,
+      "evidence": "discover_listings reaches nesting depth 7.",
+      "recommendation": "Use early returns or extract part of the decision tree into a helper.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/saashub_crawler.py",
+      "line": 68,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "src/crawlers/saashub_crawler.py",
+      "line": 77,
+      "evidence": "extract_profile is 67 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/saashub_crawler.py",
+      "line": 141,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Deeply nested control flow",
+      "severity": "medium",
+      "path": "src/crawlers/wellfound_crawler.py",
+      "line": 27,
+      "evidence": "discover_listings reaches nesting depth 6.",
+      "recommendation": "Use early returns or extract part of the decision tree into a helper.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/wellfound_crawler.py",
+      "line": 43,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/wellfound_crawler.py",
+      "line": 66,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "src/crawlers/wellfound_crawler.py",
+      "line": 75,
+      "evidence": "extract_profile is 77 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/wellfound_crawler.py",
+      "line": 82,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/wellfound_crawler.py",
+      "line": 149,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "src/crawlers/yc_crawler.py",
+      "line": 31,
+      "evidence": "discover_listings is 67 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/yc_crawler.py",
+      "line": 90,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/crawlers/yc_crawler.py",
+      "line": 146,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "src/main.py",
+      "line": 15,
+      "evidence": "interactive_mode is 110 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "src/orchestrator.py",
+      "line": 51,
+      "evidence": "run is 74 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/orchestrator.py",
+      "line": 88,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "Broad exception handler",
+      "severity": "medium",
+      "path": "src/orchestrator.py",
+      "line": 130,
+      "evidence": "The code catches a bare exception or the base Exception type.",
+      "recommendation": "Catch a more specific exception so real defects are not hidden.",
+      "confidence": "evidence"
+    },
+    {
+      "title": "License file was not found",
+      "severity": "low",
+      "path": "repository tree",
+      "line": null,
+      "evidence": "No top-level license file was visible in the repository tree.",
+      "recommendation": "Add a LICENSE file if the project is intended to be reused or shared publicly.",
+      "confidence": "potential"
+    }
+  ],
+  "recommendations": [
+    "Catch a more specific exception so real defects are not hidden.",
+    "Use early returns or extract part of the decision tree into a helper.",
+    "Look for a natural helper function or smaller responsibility inside this function.",
+    "Add a small automated test suite around core behavior before making larger changes.",
+    "Add a LICENSE file if the project is intended to be reused or shared publicly."
+  ],
+  "limitations": [
+    "The agent inspects at most 8 source files per run to stay small and rate-limit friendly.",
+    "Static-analysis findings are maintainability signals, not guaranteed software defects.",
+    "Private repositories or higher GitHub rate limits require setting GITHUB_TOKEN."
+  ],
+  "metrics": {
+    "files_analyzed": 8,
+    "total_lines_analyzed": 1206,
+    "languages": {
+      "Python": 8
+    },
+    "has_tests": false,
+    "has_readme": true,
+    "has_license_file": false,
+    "has_python_dependency_file": true,
+    "selected_files": [
+      "src/main.py",
+      "src/orchestrator.py",
+      "src/__main__.py",
+      "src/crawlers/http_client.py",
+      "src/crawlers/f6s_crawler.py",
+      "src/crawlers/wellfound_crawler.py",
+      "src/crawlers/saashub_crawler.py",
+      "src/crawlers/yc_crawler.py"
+    ]
+  },
+  "llm_summary": null
+}

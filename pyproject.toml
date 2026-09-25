@@ -1,0 +1,10 @@
+[project]
+name = "specter"
+version = "0.1.0"
+description = "Specter: A small agentic AI assignment project for GitHub repository analysis."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+repo-agent = "repo_agent.__main__:main"
+

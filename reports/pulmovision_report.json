@@ -1,0 +1,225 @@
+{
+  "repository": {
+    "owner": "Eren-Sama",
+    "name": "PulmoVision",
+    "full_name": "Eren-Sama/PulmoVision",
+    "html_url": "https://github.com/Eren-Sama/PulmoVision",
+    "description": "No description provided.",
+    "default_branch": "main",
+    "language": "Jupyter Notebook",
+    "stars": 0,
+    "forks": 0,
+    "open_issues": 0,
+    "license_name": "Not specified",
+    "updated_at": "2026-07-24T09:33:57Z"
+  },
+  "user_goal": "Analyze https://github.com/Eren-Sama/PulmoVision and identify code quality and maintainability issues",
+  "plan": [
+    {
+      "number": 1,
+      "title": "Validate the GitHub repository URL and user goal",
+      "tool": "URL parser",
+      "expected_result": "owner and repo name"
+    },
+    {
+      "number": 2,
+      "title": "Gather repository metadata",
+      "tool": "GitHub API",
+      "expected_result": "basic project context"
+    },
+    {
+      "number": 3,
+      "title": "Inspect the repository file tree",
+      "tool": "GitHub API",
+      "expected_result": "candidate source files"
+    },
+    {
+      "number": 4,
+      "title": "Read selected source files",
+      "tool": "GitHub contents API",
+      "expected_result": "source text for analysis"
+    },
+    {
+      "number": 5,
+      "title": "Run deterministic static analysis",
+      "tool": "Python AST/text analyzer",
+      "expected_result": "evidence-backed findings"
+    },
+    {
+      "number": 6,
+      "title": "Validate findings and prepare a structured report",
+      "tool": "agent reviewer",
+      "expected_result": "final Markdown/JSON result"
+    }
+  ],
+  "execution_status": "completed",
+  "recovery_summary": "No recoverable tool failure occurred during this run.",
+  "tools_used": [
+    "GitHub API tool for repository metadata, tree, and file contents",
+    "Python static-analysis tool using text checks and AST inspection"
+  ],
+  "tool_events": [
+    {
+      "tool": "GitHub API",
+      "action": "fetch repository metadata",
+      "status": "ok",
+      "detail": "Repository metadata collected"
+    },
+    {
+      "tool": "GitHub API",
+      "action": "fetch repository file tree",
+      "status": "ok",
+      "detail": "Repository file tree collected"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read app.py",
+      "status": "ok",
+      "detail": "Read app.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read predict.py",
+      "status": "ok",
+      "detail": "Read predict.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read model.py",
+      "status": "ok",
+      "detail": "Read model.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read train.py",
+      "status": "ok",
+      "detail": "Read train.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read peft_utils.py",
+      "status": "ok",
+      "detail": "Read peft_utils.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read explainability.py",
+      "status": "ok",
+      "detail": "Read explainability.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read utils.py",
+      "status": "ok",
+      "detail": "Read utils.py"
+    },
+    {
+      "tool": "GitHub contents API",
+      "action": "read config.py",
+      "status": "ok",
+      "detail": "Read config.py"
+    },
+    {
+      "tool": "Python static analyzer",
+      "action": "inspect selected source files",
+      "status": "ok",
+      "detail": "Static analysis completed"
+    },
+    {
+      "tool": "agent reviewer",
+      "action": "validate static-analysis findings",
+      "status": "ok",
+      "detail": "Validated 6 findings"
+    }
+  ],
+  "failures": [],
+  "findings": [
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "app.py",
+      "line": 202,
+      "evidence": "main is 136 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "No obvious test directory or test files found",
+      "severity": "medium",
+      "path": "repository tree",
+      "line": null,
+      "evidence": "The repository tree did not include paths like tests/, test_*.py, or files under a test folder.",
+      "recommendation": "Add a small automated test suite around core behavior before making larger changes.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "train.py",
+      "line": 29,
+      "evidence": "train_model is 80 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Long function",
+      "severity": "medium",
+      "path": "train.py",
+      "line": 147,
+      "evidence": "main is 62 lines long.",
+      "recommendation": "Look for a natural helper function or smaller responsibility inside this function.",
+      "confidence": "potential"
+    },
+    {
+      "title": "License file was not found",
+      "severity": "low",
+      "path": "repository tree",
+      "line": null,
+      "evidence": "No top-level license file was visible in the repository tree.",
+      "recommendation": "Add a LICENSE file if the project is intended to be reused or shared publicly.",
+      "confidence": "potential"
+    },
+    {
+      "title": "Function has many parameters",
+      "severity": "low",
+      "path": "train.py",
+      "line": 29,
+      "evidence": "train_model has 10 parameters.",
+      "recommendation": "Consider grouping related values into a small data object if those parameters travel together.",
+      "confidence": "potential"
+    }
+  ],
+  "recommendations": [
+    "Look for a natural helper function or smaller responsibility inside this function.",
+    "Add a small automated test suite around core behavior before making larger changes.",
+    "Consider grouping related values into a small data object if those parameters travel together.",
+    "Add a LICENSE file if the project is intended to be reused or shared publicly."
+  ],
+  "limitations": [
+    "The agent inspects at most 8 source files per run to stay small and rate-limit friendly.",
+    "Static-analysis findings are maintainability signals, not guaranteed software defects.",
+    "Private repositories or higher GitHub rate limits require setting GITHUB_TOKEN."
+  ],
+  "metrics": {
+    "files_analyzed": 8,
+    "total_lines_analyzed": 1629,
+    "languages": {
+      "Python": 8
+    },
+    "has_tests": false,
+    "has_readme": true,
+    "has_license_file": false,
+    "has_python_dependency_file": true,
+    "selected_files": [
+      "app.py",
+      "predict.py",
+      "model.py",
+      "train.py",
+      "peft_utils.py",
+      "explainability.py",
+      "utils.py",
+      "config.py"
+    ]
+  },
+  "llm_summary": null
+}
