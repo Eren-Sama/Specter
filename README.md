@@ -24,6 +24,7 @@ The optional LLM summarizer only runs when `GROQ_API_KEY` is set. Everything els
 Requires **Python 3.10+**. No dependencies to install.
 
 ```bash
+git clone https://github.com/Eren-Sama/Specter.git
 cd Specter
 python -m repo_agent --help
 ```
