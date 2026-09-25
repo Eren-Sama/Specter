@@ -2,63 +2,63 @@
 
 ## Design Decisions
 
-I went with GitHub repository analysis because it's a natural fit — the agent gets live data from a real API, uses multiple tools, and the results are verifiable. Everything runs on the Python standard library so there's nothing to install.
+I chose GitHub repository analysis because it fits the requirements naturally. The agent pulls live data from a real API, uses different tools, and you can easily verify the results. I built everything using the Python standard library, so you don't need to install anything.
 
-The core idea is that the agent is deterministic. URL parsing, API calls, retries, file selection, AST checks, report generation — all of that is normal Python. The optional LLM summarizer only kicks in if you set `GROQ_API_KEY`, and even then it just rephrases the findings that the tools already collected. So the project works fine without any paid services.
+The core agent is completely deterministic. All the URL parsing, API calls, file selection, AST checks, and report generation run on plain Python. There is an optional LLM summarizer that only runs if you set the `GROQ_API_KEY` environment variable. Even then, it just reformats the findings the tools already gathered. The project runs perfectly fine without relying on paid APIs.
 
 ### Why no dependencies
 
-Not laziness — it's deliberate. A reviewer can clone and run `python -m repo_agent` instantly. No venv, no version conflicts, no pip install. The only optional dep is Pillow for generating the terminal screenshots.
+This was a deliberate choice. I wanted a reviewer to be able to clone the repo and immediately run `python -m repo_agent`. You don't have to deal with virtual environments, pip installs, or version conflicts. The only optional dependency is Pillow, which I just used to generate the terminal screenshots for the docs.
 
 ### Why AST instead of regex
 
-Regex would've been quicker to write but it can't do structural analysis. You can't reliably measure nesting depth or function length with regex. Python's `ast` module gives you the actual parse tree for free.
+Writing some regex patterns would have been faster, but regex is terrible for structural analysis. You simply can't rely on it to measure things like nesting depth or function length. Python's built-in `ast` module provides the exact parse tree for free.
 
 ### File selection scoring
 
-`choose_source_files` uses a scoring heuristic to pick which files to analyze:
+The `choose_source_files` function uses a basic scoring system to decide which files to look at:
 
-- +25 Python files (we can do AST analysis on these)
-- +8 shallow/top-level files (more likely to be core code)
-- +6 files in `src/`, `app/`, `lib/`
-- -5 test files (still included, just lower priority)
-- +0–1 based on file size (slight preference for bigger files)
+* +25 Python files (since we can run AST checks on them)
+* +8 shallow or top-level files (these usually contain core code)
+* +6 files sitting in `src/`, `app/`, or `lib/`
+* -5 test files (they are still included, but given lower priority)
+* +0 to 1 based on file size (larger files get a slight bump)
 
-I tuned these by running the agent on a few open-source repos and checking which files it picked.
+I tweaked these numbers by running the agent against a few random open-source repos to see what it naturally grabbed.
 
 ## Goal-Dependent Planning
 
-The plan isn't hardcoded. `_build_plan()` looks at keywords in the goal to decide what steps to include:
+The execution plan is not hardcoded. The `_build_plan()` method checks the user's goal for specific keywords and adjusts the steps accordingly:
 
-- "code quality" / "analyze" → full source-file reading + static analysis
-- "test" / "coverage" → adds a test-health evaluation step
-- "dependencies" / "CI" → adds dependency/CI inspection
-- "stars" / "metadata" → skips code analysis entirely
+* "code quality" or "analyze" triggers full source file reading and static analysis
+* "test" or "coverage" adds a step to evaluate test health
+* "dependencies" or "CI" adds a check for dependency and CI configs
+* "stars" or "metadata" skips the code analysis entirely
 
-So `"Analyze flask for code quality"` and `"Give me stars and forks for flask"` produce different plans.
+If you ask to "Analyze flask for code quality," you get a completely different plan than if you ask for "stars and forks for flask."
 
 ## Failure Handling
 
-The `--demo-failure` flag injects a simulated timeout on the first API call. The retry wrapper catches it, waits with exponential backoff (1s, then 2s), and retries.
+You can pass the `--demo-failure` flag to inject a fake timeout on the very first API call. The retry wrapper will catch it, wait using exponential backoff (1s, then 2s), and try again.
 
-But the agent also handles real failures:
-- **404:** Checks if the repo exists before doing anything else. Gives a clear error, not a stack trace.
-- **429 rate limit:** Marked recoverable, retried with backoff so we're not hammering the API.
-- **Network errors / bad JSON:** Caught and retried.
+The agent handles real failures too:
+* **404:** It checks if the repo actually exists before starting. If it doesn't, you get a clean error message instead of a stack trace.
+* **429 rate limit:** This is flagged as recoverable and retried with backoff so the API doesn't get hammered.
+* **Network errors or bad JSON:** These get caught and retried automatically.
 
-The retry strategy is exponential backoff: `delay = base_delay × 2^(attempt-1)`. Default is 3 attempts with 1s base.
+The backoff math is simple: `delay = base_delay * 2^(attempt-1)`. By default it makes 3 attempts starting with a 1-second delay.
 
 ## Limitations
 
-The static analyzer is intentionally simple. It catches broad exceptions, long functions, TODO markers, syntax errors, missing tests, deep nesting. These are useful signals but they're not guaranteed bugs.
+The static analyzer is pretty basic on purpose. It looks for broad exceptions, long functions, TODO comments, syntax errors, missing tests, and deep nesting. These are good hints for code quality, but they aren't guaranteed to be bugs.
 
-The agent only looks at a limited number of files per run to stay fast and avoid rate limits. A production version would need deeper scans, more language support, and persistent caching.
+The agent also limits how many files it checks per run. This keeps things fast and helps avoid rate limits. A real production version would need deeper scanning, support for more languages, and a solid caching layer.
 
 ## What I'd Do With More Time
 
-- Web UI for easier use
-- Local repo support (not just GitHub)
-- Deeper dependency and CI inspection
-- Tree-sitter for multi-language AST support
-- Persistent disk cache across runs
-- Snapshot-based integration tests
+* Build a web UI to make it easier to use
+* Add support for local directories instead of just GitHub repos
+* Write deeper checks for dependencies and CI pipelines
+* Integrate Tree-sitter so we could do AST analysis on multiple languages
+* Save cache to disk so it persists across runs
+* Add snapshot-based integration tests
